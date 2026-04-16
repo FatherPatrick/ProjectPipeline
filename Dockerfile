@@ -29,8 +29,7 @@ COPY . .
 
 RUN mkdir -p logs
 
-# Railway injects PORT; we expose 8000 as documentation only
 EXPOSE 8000
 
-# Default: run API + embedded scheduler (override CMD in Railway for dashboard)
+# Default command — override in render.yaml or your platform's service config
 CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 2"]

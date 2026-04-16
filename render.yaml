@@ -1,0 +1,67 @@
+databases:
+  - name: personal-data-dashboard-db
+    databaseName: personal_data_dashboard
+    user: dashboard_user
+    plan: free
+
+services:
+  - type: web
+    name: personal-data-dashboard-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT --workers 2
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHONPATH
+        value: /app/src
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: personal-data-dashboard-db
+          property: connectionString
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GITHUB_USERNAME
+        sync: false
+      - key: SPOTIFY_CLIENT_ID
+        sync: false
+      - key: SPOTIFY_CLIENT_SECRET
+        sync: false
+      - key: SPOTIFY_REFRESH_TOKEN
+        sync: false
+      - key: SPOTIFY_REDIRECT_URI
+        value: http://127.0.0.1:8888/callback
+      - key: SCHEDULER_ENABLED
+        value: "true"
+      - key: LOG_FILE
+        value: logs/app.log
+      - key: LOG_LEVEL
+        value: INFO
+
+  - type: web
+    name: personal-data-dashboard-ui
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: gunicorn dashboard.app:server --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    plan: free
+    envVars:
+      - key: PYTHONPATH
+        value: /app/src
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: personal-data-dashboard-db
+          property: connectionString
+      - key: API_BASE_URL
+        sync: false   # Set this to your deployed API URL after first deploy
+      - key: DASHBOARD_PORT
+        value: "10000"
+      - key: LOG_LEVEL
+        value: INFO

@@ -22,7 +22,7 @@ A full-stack data pipeline that aggregates personal data from GitHub, Spotify, a
 | **Backend API** | FastAPI |
 | **Dashboard** | Plotly Dash |
 | **Dependency Management** | Poetry |
-| **Deployment** | Docker + Railway |
+| **Deployment** | Docker + Render |
 
 ## Project Structure
 
@@ -200,15 +200,15 @@ docker build -t personal-data-dashboard .
 docker run -p 8000:8000 -p 8050:8050 --env-file .env personal-data-dashboard
 ```
 
-### Railway
+### Render
 
-Deploy to Railway for free:
+Deploy to Render using the included `render.yaml` blueprint:
 
-1. Create a Railway account at [railway.app](https://railway.app)
-2. Connect your GitHub repository
-3. Add PostgreSQL service
-4. Configure environment variables
-5. Deploy!
+1. Push your repo to GitHub
+2. Go to [dashboard.render.com](https://dashboard.render.com) → New → Blueprint
+3. Connect your GitHub repository — Render will detect `render.yaml` automatically
+4. Fill in secret environment variables (`GITHUB_TOKEN`, `SPOTIFY_*`, etc.) in each service's Environment tab
+5. After the API deploys, copy its public URL and set it as `API_BASE_URL` in the dashboard service
 
 ## Development
 
@@ -240,7 +240,7 @@ poetry run mypy src
 - [ ] FastAPI backend
 - [ ] Plotly Dash frontend
 - [ ] Docker containerization
-- [ ] Railway deployment
+- [x] Render deployment
 - [ ] Steam API integration
 - [ ] AI-powered insights
 - [ ] Email notifications
