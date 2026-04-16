@@ -36,6 +36,7 @@ apscheduler = "^3.10"
 dash = "^2.14"
 plotly = "^5.17"
 dash-bootstrap-components = "^1.5"
+gunicorn = "^22.0"
 
 # Data processing
 pandas = "^2.2"
