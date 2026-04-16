@@ -12,12 +12,13 @@ RUN pip install --no-cache-dir poetry==2.3.4
 COPY pyproject.toml poetry.lock* ./
 
 RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi --only main
+    poetry install --no-interaction --no-ansi --only main --no-root
 
 # ── runtime stage ─────────────────────────────────────────────────────────────
 FROM python:3.13-slim
 
 WORKDIR /app
+ENV PYTHONPATH=/app/src
 
 # Copy installed packages from builder
 COPY --from=builder /usr/local/lib/python3.13 /usr/local/lib/python3.13
