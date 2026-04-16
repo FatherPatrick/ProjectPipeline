@@ -51,7 +51,49 @@ def get_dashboard_overview(
     try:
         user = db.query(User).first()
         if not user:
-            raise ValueError("No user found in database")
+            since_datetime = datetime.utcnow() - timedelta(days=days)
+            since_date = since_datetime.date()
+            end_date = date.today()
+
+            empty_github_stats = GitHubStatsResponse(
+                total_repositories=0,
+                total_commits=0,
+                total_additions=0,
+                total_deletions=0,
+                average_commits_per_day=0.0,
+                most_used_language=None,
+                language_breakdown={},
+                contribution_days=0,
+                consecutive_days=0,
+                top_repositories=[],
+            )
+
+            empty_spotify_stats = SpotifyStatsResponse(
+                total_tracks_played=0,
+                total_listening_minutes=0,
+                unique_artists=0,
+                unique_tracks=0,
+                average_daily_listening=0.0,
+                top_artists=[],
+                top_tracks=[],
+                listening_streak=0,
+            )
+
+            return DashboardOverviewResponse(
+                date_range={
+                    "start": since_date.isoformat(),
+                    "end": end_date.isoformat(),
+                },
+                github_stats=empty_github_stats,
+                github_recent_contributions=[],
+                spotify_stats=empty_spotify_stats,
+                spotify_recent_sessions=[],
+                daily_aggregations=[],
+                top_productive_days=[],
+                avg_daily_commits=0.0,
+                avg_daily_listening_minutes=0.0,
+                productivity_trend="stable",
+            )
 
         since_datetime = datetime.utcnow() - timedelta(days=days)
         since_date = since_datetime.date()
@@ -204,7 +246,7 @@ def get_dashboard_overview(
         )
 
     except Exception as e:
-        logger.error(f"Error getting dashboard overview: {str(e)}")
+        logger.exception("Error getting dashboard overview: {}", e)
         raise
 
 
