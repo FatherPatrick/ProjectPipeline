@@ -27,7 +27,10 @@ class Settings(BaseSettings):
     # Spotify API
     spotify_client_id: str = ""
     spotify_client_secret: str = ""
-    spotify_redirect_uri: str = "http://localhost:8000/auth/spotify/callback"
+    spotify_redirect_uri: str = "http://127.0.0.1:8888/callback"
+    spotify_refresh_token: str = ""
+    spotify_access_token: str = ""
+    
 
     # Steam API (Optional)
     steam_api_key: str = ""

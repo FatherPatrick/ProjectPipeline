@@ -59,7 +59,7 @@ Write-Host ""
 
 Write-Host "Next steps:" -ForegroundColor Yellow
 Write-Host "  1. Configure your API credentials in .env"
-Write-Host "  2. Run the backfill: poetry run python scripts/backfill_data.py"
-Write-Host "  3. Start the API: poetry run python -m api.main"
-Write-Host "  4. View docs: http://localhost:8000/docs"
+Write-Host "  2. Start the app: poetry run python scripts/start_app.py"
+Write-Host "  3. View API docs: http://localhost:8000/docs"
+Write-Host "  4. Open dashboard: http://localhost:8050"
 Write-Host ""

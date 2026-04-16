@@ -48,8 +48,8 @@ def run_spotify_job():
         client = SpotifyClient(
             client_id=settings.spotify_client_id,
             client_secret=settings.spotify_client_secret,
-            access_token=user.spotify_access_token,
-            refresh_token=user.spotify_refresh_token,
+            access_token=user.spotify_access_token or settings.spotify_access_token or None,
+            refresh_token=user.spotify_refresh_token or settings.spotify_refresh_token or None,
             redirect_uri=settings.spotify_redirect_uri,
         )
 

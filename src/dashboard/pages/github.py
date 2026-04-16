@@ -150,7 +150,11 @@ def update_commits_chart(days):
             hoverinfo="skip",
         ))
 
-    fig.update_layout(**CHART_LAYOUT, showlegend=True, legend=dict(orientation="h", y=1.1))
+    fig.update_layout(**{
+        **CHART_LAYOUT,
+        "showlegend": True,
+        "legend": dict(**CHART_LAYOUT.get("legend", {}), orientation="h", y=1.1),
+    })
     return fig
 
 
@@ -213,12 +217,12 @@ def update_code_changes(days):
         hovertemplate="<b>%{x|%b %d}</b><br>−%{customdata} lines<extra></extra>",
         customdata=df["total_deletions"],
     ))
-    fig.update_layout(
+    fig.update_layout(**{
         **CHART_LAYOUT,
-        barmode="relative",
-        showlegend=True,
-        legend=dict(orientation="h", y=1.1),
-    )
+        "barmode": "relative",
+        "showlegend": True,
+        "legend": dict(**CHART_LAYOUT.get("legend", {}), orientation="h", y=1.1),
+    })
     return fig
 
 

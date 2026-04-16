@@ -1,6 +1,7 @@
 """
 Shared API client for fetching data from the FastAPI backend.
 """
+import os
 from typing import Any, Dict, Optional
 import requests
 from loguru import logger
@@ -8,7 +9,11 @@ from loguru import logger
 from pipeline.config import get_settings
 
 settings = get_settings()
-API_BASE = f"http://localhost:{settings.api_port}"
+API_BASE = (
+    os.getenv("API_BASE_URL")
+    or os.getenv("API_URL")
+    or f"http://localhost:{settings.effective_port}"
+).rstrip("/")
 
 
 def _get(endpoint: str, params: Optional[Dict[str, Any]] = None) -> Optional[Dict]:

@@ -226,11 +226,18 @@ def update_hourly_chart(days):
         marker_color=time_colors,
         hovertemplate="<b>%{x}</b><br>%{y} tracks<extra></extra>",
     ))
-    fig.update_layout(
+    fig.update_layout(**{
         **CHART_LAYOUT,
-        xaxis=dict(**CHART_LAYOUT.get("xaxis", {}),
-                   tickangle=45, tickfont=dict(size=10, color=COLORS["text_secondary"])),
-        annotations=[
+        "xaxis": {
+            **CHART_LAYOUT.get("xaxis", {}),
+            "tickangle": 45,
+            "tickfont": {
+                **CHART_LAYOUT.get("xaxis", {}).get("tickfont", {}),
+                "size": 10,
+                "color": COLORS["text_secondary"],
+            },
+        },
+        "annotations": [
             dict(x=9, y=max(counts) * 1.05 if counts else 1, text="Morning",
                  showarrow=False, font=dict(color="#ffa657", size=10)),
             dict(x=15, y=max(counts) * 1.05 if counts else 1, text="Afternoon",
@@ -238,7 +245,7 @@ def update_hourly_chart(days):
             dict(x=20, y=max(counts) * 1.05 if counts else 1, text="Evening",
                  showarrow=False, font=dict(color=COLORS["spotify"], size=10)),
         ],
-    )
+    })
     return fig
 
 
@@ -315,6 +322,10 @@ def update_daily_listening_chart(days):
             hoverinfo="skip",
         ))
 
-    fig.update_layout(**CHART_LAYOUT, showlegend=True, legend=dict(orientation="h", y=1.1),
-                      yaxis=dict(**CHART_LAYOUT.get("yaxis", {}), title="Minutes"))
+    fig.update_layout(**{
+        **CHART_LAYOUT,
+        "showlegend": True,
+        "legend": dict(**CHART_LAYOUT.get("legend", {}), orientation="h", y=1.1),
+        "yaxis": dict(**CHART_LAYOUT.get("yaxis", {}), title="Minutes"),
+    })
     return fig

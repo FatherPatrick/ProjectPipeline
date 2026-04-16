@@ -71,6 +71,8 @@ def test_spotify(settings) -> bool:
         client = SpotifyClient(
             client_id=settings.spotify_client_id,
             client_secret=settings.spotify_client_secret,
+            access_token=settings.spotify_access_token or None,
+            refresh_token=settings.spotify_refresh_token or None,
             redirect_uri=settings.spotify_redirect_uri,
         )
 

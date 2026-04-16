@@ -54,8 +54,8 @@ echo ========================================
 echo.
 echo Next steps:
 echo   1. Configure your API credentials in .env
-echo   2. Run the backfill: poetry run python scripts/backfill_data.py
-echo   3. Start the API: poetry run python -m api.main
-echo   4. View docs: http://localhost:8000/docs
+echo   2. Start the app: poetry run python scripts/start_app.py
+echo   3. View API docs: http://localhost:8000/docs
+echo   4. Open dashboard: http://localhost:8050
 echo.
 pause

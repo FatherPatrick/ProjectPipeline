@@ -58,7 +58,7 @@ def main():
         print("   ✓ GitHub data collected and stored")
     except Exception as e:
         print(f"   ✗ Error: {str(e)}")
-        logger.error(f"GitHub backfill failed: {str(e)}", exc_info=True)
+        logger.exception("GitHub backfill failed: {}", e)
 
     # Collect Spotify data
     print("\n3. Collecting Spotify data...")
@@ -67,7 +67,7 @@ def main():
         print("   ✓ Spotify data collected and stored")
     except Exception as e:
         print(f"   ✗ Error: {str(e)}")
-        logger.error(f"Spotify backfill failed: {str(e)}", exc_info=True)
+        logger.exception("Spotify backfill failed: {}", e)
 
     # Run aggregation
     print("\n4. Calculating aggregations...")
@@ -76,7 +76,7 @@ def main():
         print("   ✓ Daily aggregations calculated")
     except Exception as e:
         print(f"   ✗ Error: {str(e)}")
-        logger.error(f"Aggregation failed: {str(e)}", exc_info=True)
+        logger.exception("Aggregation failed: {}", e)
 
     print("\n" + "=" * 60)
     print("✓ Backfill complete!")

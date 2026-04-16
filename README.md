@@ -111,35 +111,24 @@ You should see:
 
 ## Running the Application
 
-### Start the Data Collection Pipeline
+Start the local app stack with one command:
 
 ```bash
-poetry run python -m pipeline_jobs.scheduler
+poetry run python scripts/start_app.py
 ```
 
-This starts the APScheduler that runs data collection jobs on a weekly schedule.
+This launcher:
+- Initializes database tables
+- Starts the FastAPI backend on `http://localhost:8000`
+- Starts the Dash dashboard on `http://localhost:8050`
+- Starts the background scheduler as part of the API process
 
-### Start the FastAPI Backend
-
-In another terminal:
-
-```bash
-poetry run python -m api.main
-```
-
-The API will be available at `http://localhost:8000`
+Available URLs:
 - API docs: `http://localhost:8000/docs`
 - ReDoc: `http://localhost:8000/redoc`
+- Dashboard: `http://localhost:8050`
 
-### Start the Dashboard
-
-In another terminal:
-
-```bash
-poetry run python -m dashboard.app
-```
-
-The dashboard will be available at `http://localhost:8050`
+Press `Ctrl+C` in that terminal to stop both processes.
 
 ## Data Models
 

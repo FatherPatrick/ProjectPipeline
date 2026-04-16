@@ -9,6 +9,7 @@ import requests
 from collections import defaultdict
 
 from collectors._base import BaseCollector, AuthenticationError, DataValidationError
+from requests.auth import HTTPBasicAuth
 
 
 class SpotifyClient(BaseCollector):
@@ -31,7 +32,8 @@ class SpotifyClient(BaseCollector):
         client_secret: str,
         access_token: Optional[str] = None,
         refresh_token: Optional[str] = None,
-        redirect_uri: str = "http://localhost:8000/auth/spotify/callback",
+        authorization_code: Optional[str] = None,
+        redirect_uri: str = "http://127.0.0.1:8888/callback",
     ):
         """
         Initialize Spotify client.
@@ -41,6 +43,7 @@ class SpotifyClient(BaseCollector):
             client_secret: Spotify application client secret
             access_token: Optional existing access token
             refresh_token: Optional existing refresh token
+            authorization_code: Optional one-time OAuth authorization code
             redirect_uri: OAuth redirect URI
         """
         super().__init__()
@@ -48,6 +51,7 @@ class SpotifyClient(BaseCollector):
         self.client_secret = client_secret
         self.access_token = access_token
         self.refresh_token = refresh_token
+        self.authorization_code = authorization_code
         self.redirect_uri = redirect_uri
         self.token_expires_at = None
 
@@ -83,6 +87,11 @@ class SpotifyClient(BaseCollector):
 
         except Exception as e:
             logger.error(f"Spotify authentication failed: {str(e)}")
+            if "401" in str(e):
+                raise AuthenticationError(
+                    "Spotify user endpoints require Authorization Code flow. "
+                    "Generate and set SPOTIFY_REFRESH_TOKEN in .env."
+                )
             raise AuthenticationError(f"Failed to authenticate with Spotify: {str(e)}")
 
     def collect(self) -> Dict[str, Any]:
@@ -125,10 +134,22 @@ class SpotifyClient(BaseCollector):
 
     def _authenticate(self):
         """
-        Authenticate with Spotify using Client Credentials flow.
-        For production, this should use Authorization Code flow for user data.
+        Authenticate with Spotify.
+
+        Preference order:
+        1. Refresh token flow (recommended for user data)
+        2. Authorization code exchange
+        3. Client credentials flow (limited, no user endpoints)
         """
         logger.debug("Authenticating with Spotify...")
+
+        if self.refresh_token:
+            self._refresh_token()
+            return
+
+        if self.authorization_code:
+            self._exchange_authorization_code()
+            return
 
         try:
             response = requests.post(
@@ -149,6 +170,32 @@ class SpotifyClient(BaseCollector):
 
         except Exception as e:
             raise AuthenticationError(f"Spotify authentication failed: {str(e)}")
+
+    def _exchange_authorization_code(self):
+        """Exchange one-time authorization code for access and refresh tokens."""
+        logger.debug("Exchanging Spotify authorization code...")
+
+        try:
+            response = requests.post(
+                self.AUTH_URL,
+                auth=HTTPBasicAuth(self.client_id, self.client_secret),
+                data={
+                    "grant_type": "authorization_code",
+                    "code": self.authorization_code,
+                    "redirect_uri": self.redirect_uri,
+                },
+                timeout=30,
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            self.access_token = data["access_token"]
+            self.refresh_token = data.get("refresh_token", self.refresh_token)
+            self.token_expires_at = datetime.utcnow() + timedelta(seconds=data["expires_in"])
+            logger.debug("\u2713 Authorization code exchange successful")
+
+        except Exception as e:
+            raise AuthenticationError(f"Spotify authorization code exchange failed: {str(e)}")
 
     def _refresh_token(self):
         """

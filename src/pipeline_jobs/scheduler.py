@@ -153,7 +153,7 @@ def main():
         sys.exit(0)
 
     except Exception as e:
-        logger.error(f"Scheduler error: {str(e)}", exc_info=True)
+        logger.exception("Scheduler error: {}", e)
         scheduler.stop()
         sys.exit(1)
 

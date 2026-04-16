@@ -160,18 +160,18 @@ def update_productivity_chart(days):
         line=dict(color=COLORS["spotify"], width=2),
         yaxis="y2",
     ))
-    fig.update_layout(
+    fig.update_layout(**{
         **CHART_LAYOUT,
-        yaxis=dict(**CHART_LAYOUT.get("yaxis", {}), title="Commits", titlefont=dict(color=COLORS["github"])),
-        yaxis2=dict(
+        "yaxis": dict(**CHART_LAYOUT.get("yaxis", {}), title="Commits", titlefont=dict(color=COLORS["github"])),
+        "yaxis2": dict(
             overlaying="y", side="right", title="Tracks",
             titlefont=dict(color=COLORS["spotify"]),
             tickfont=dict(color=COLORS["text_secondary"]),
             gridcolor=COLORS["border"],
         ),
-        hovermode="x unified",
-        legend=dict(orientation="h", y=1.1),
-    )
+        "hovermode": "x unified",
+        "legend": dict(**CHART_LAYOUT.get("legend", {}), orientation="h", y=1.1),
+    })
     return fig
 
 
@@ -241,18 +241,27 @@ def update_heatmap(days):
         ygap=3,
     ))
 
-    fig.update_layout(
+    fig.update_layout(**{
         **CHART_LAYOUT,
-        yaxis=dict(
-            tickvals=list(range(7)),
-            ticktext=weekday_labels,
-            tickfont=dict(color=COLORS["text_secondary"], size=11),
-            gridcolor="transparent",
-        ),
-        xaxis=dict(showgrid=False, showticklabels=False),
-        height=180,
-        margin=dict(l=40, r=10, t=10, b=20),
-    )
+        "yaxis": {
+            **CHART_LAYOUT.get("yaxis", {}),
+            "tickvals": list(range(7)),
+            "ticktext": weekday_labels,
+            "tickfont": {
+                **CHART_LAYOUT.get("yaxis", {}).get("tickfont", {}),
+                "color": COLORS["text_secondary"],
+                "size": 11,
+            },
+            "gridcolor": "rgba(0,0,0,0)",
+        },
+        "xaxis": {
+            **CHART_LAYOUT.get("xaxis", {}),
+            "showgrid": False,
+            "showticklabels": False,
+        },
+        "height": 180,
+        "margin": dict(l=40, r=10, t=10, b=20),
+    })
     return fig
 
 
