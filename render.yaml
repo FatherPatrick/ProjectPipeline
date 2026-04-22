@@ -37,6 +37,10 @@ services:
         value: http://127.0.0.1:8888/callback
       - key: SCHEDULER_ENABLED
         value: "true"
+      - key: BACKFILL_ENDPOINT_ENABLED
+        value: "false"
+      - key: BACKFILL_ADMIN_TOKEN
+        sync: false
       - key: LOG_FILE
         value: logs/app.log
       - key: LOG_LEVEL

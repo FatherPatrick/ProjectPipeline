@@ -40,6 +40,10 @@ class Settings(BaseSettings):
     scheduler_timezone: str = "UTC"
     data_refresh_interval_hours: int = 168  # Weekly
 
+    # Admin operations
+    backfill_endpoint_enabled: bool = True
+    backfill_admin_token: str = ""
+
     # API Server
     api_host: str = "0.0.0.0"
     api_port: int = 8000

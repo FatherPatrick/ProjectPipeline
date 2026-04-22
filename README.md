@@ -166,6 +166,21 @@ Press `Ctrl+C` in that terminal to stop both processes.
 - `GET /api/dashboard/overview` - Combined dashboard data
 - `GET /api/dashboard/metrics` - Aggregated metrics
 
+### Admin
+- `POST /api/admin/backfill` - Trigger a one-time backfill run (requires `X-Admin-Token`)
+
+Example:
+
+```bash
+curl -X POST "https://<your-api-host>/api/admin/backfill" \
+	-H "X-Admin-Token: <your-secret-token>"
+```
+
+Production safety notes:
+- Keep `BACKFILL_ENDPOINT_ENABLED=false` by default
+- Set a strong `BACKFILL_ADMIN_TOKEN` secret
+- Temporarily set `BACKFILL_ENDPOINT_ENABLED=true` only when you need to run a backfill
+
 ## Testing
 
 ```bash

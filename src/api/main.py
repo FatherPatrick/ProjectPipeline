@@ -15,7 +15,7 @@ import os
 
 from pipeline.config import get_settings
 from api.schemas import HealthResponse
-from api.routes import github, spotify, dashboard
+from api.routes import github, spotify, dashboard, admin
 
 settings = get_settings()
 
@@ -155,11 +155,13 @@ async def health():
 app.include_router(github.router)
 app.include_router(spotify.router)
 app.include_router(dashboard.router)
+app.include_router(admin.router)
 
 # Add version prefix route for future versioning
 app.include_router(github.router, prefix="/v1", tags=["v1"])
 app.include_router(spotify.router, prefix="/v1", tags=["v1"])
 app.include_router(dashboard.router, prefix="/v1", tags=["v1"])
+app.include_router(admin.router, prefix="/v1", tags=["v1"])
 
 
 # ============================================================================
