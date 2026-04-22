@@ -61,6 +61,9 @@ def get_db() -> Generator[Session, None, None]:
 
 def init_db() -> None:
     """Initialize database by creating all tables defined in models."""
+    # Ensure model modules are imported so SQLAlchemy metadata is populated.
+    from pipeline import models  # noqa: F401
+
     Base.metadata.create_all(bind=engine)
     print("✓ Database tables created successfully")
 

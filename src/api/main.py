@@ -14,6 +14,7 @@ from loguru import logger
 import os
 
 from pipeline.config import get_settings
+from pipeline.database import init_db
 from api.schemas import HealthResponse
 from api.routes import github, spotify, dashboard, admin
 
@@ -42,6 +43,13 @@ async def lifespan(app: FastAPI):
     logger.info(f"  Swagger UI: http://localhost:{settings.effective_port}/docs")
     logger.info(f"  ReDoc: http://localhost:{settings.effective_port}/redoc")
     logger.info("=" * 60)
+
+    # Ensure required tables exist before serving requests.
+    try:
+        init_db()
+    except Exception as exc:
+        logger.exception("Database initialization failed: {}", exc)
+        raise
 
     # Start background scheduler (runs alongside API in same process)
     _scheduler = None
